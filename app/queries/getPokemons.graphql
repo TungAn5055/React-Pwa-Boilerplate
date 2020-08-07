@@ -1,0 +1,14 @@
+query getPokemons($first: Int!){
+            pokemons(first: $first) {
+              id
+              number
+              name,
+              image,
+              evolutions {
+                id,
+                number,
+                name,
+                image
+              }
+            }
+        }

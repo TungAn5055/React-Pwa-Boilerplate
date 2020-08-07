@@ -1,0 +1,12 @@
+export const REDUX_USER_KEY = 'user';
+export const SET_USER = 'user/SET_USER';
+export const SET_USER_SUCCESS = 'user/SET_USER_SUCCESS';
+
+export const SET_USER_NAVIGATION_BANNER = 'user/SET_USER_NAVIGATION_BANNER';
+export const SET_USER_TOP_BANNER = 'user/SET_USER_TOP_BANNER';
+export const SET_USER_BOTTOM_BANNER = 'user/SET_USER_BOTTOM_BANNER';
+
+export const SET_USER_MENU = 'user/SET_USER_MENU';
+
+export const SET_ALLOW_SHOW_ORDER_HISTORY_MENU =
+  'user/SET_ALLOW_SHOW_ORDER_HISTORY_MENU';
