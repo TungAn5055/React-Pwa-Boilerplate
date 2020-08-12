@@ -1,15 +1,17 @@
 import { put, takeLatest } from 'redux-saga/effects';
-import {GET_PRODUCT_LIST, LOAD_LIST_PRODUCT} from './constants';
+import { LOAD_LIST_PRODUCT} from './constants';
 import { actionSetListProduct } from './actions';
 
 import GET_PRODUCTS_BY_CATEGORY from '../../../queries/getProductsByCategory.graphql';
 
 // const delay = ms => new Promise(yea => setTimeout(yea, ms));
 
-export function* getProduct(action) {
-  console.log('annn1');
-  console.log(action);
+export function* getProduct({categoriesId}) {
+  // this is code get graphql
 
+
+
+  let listProducts = ['annn1'];
   yield put(actionSetListProduct(listProducts));
 }
 /**

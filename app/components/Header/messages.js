@@ -16,6 +16,10 @@ export default defineMessages({
     id: `${scope}.product-list`,
     defaultMessage: 'Product List',
   },
+  features2: {
+    id: `${scope}.product-list2`,
+    defaultMessage: 'Product List Saga',
+  },
   graphql: {
     id: `${scope}.graphql`,
     defaultMessage: 'Pokemons',

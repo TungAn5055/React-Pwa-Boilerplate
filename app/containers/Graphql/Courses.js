@@ -9,7 +9,6 @@ const customClient = new ApolloClient({
   uri: process.env.URL_BACKEND_SERVER_2,
 });
 console.log(process.env.URL_BACKEND_SERVER);
-console.log('annn1');
 console.log(process.env.URL_BACKEND_SERVER_2);
 
 const Courses = () => {

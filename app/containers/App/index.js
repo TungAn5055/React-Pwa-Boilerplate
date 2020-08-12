@@ -13,6 +13,7 @@ import { Switch, Route } from 'react-router-dom';
 
 import HomePage from 'containers/HomePage/Loadable';
 import FeaturePage from 'containers/FeaturePage/Loadable';
+import FeaturePageSaga from 'containers/FeaturePageSaga/Loadable';
 import Graphql from 'containers/Graphql/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import Header from 'components/Header';
@@ -43,6 +44,7 @@ export default function App() {
       <Switch>
         <Route exact path="/" component={HomePage} />
         <Route path="/product-list" component={FeaturePage} />
+        <Route path="/product-list2" component={FeaturePageSaga} />
         <Route path="/graphql" component={Graphql} />
         <Route path="" component={NotFoundPage} />
       </Switch>

@@ -11,8 +11,6 @@ import messages from './messages';
 
 function Header() {
   const token = Cookies.get('customer_access_token');
-  console.log(token);
-
   return (
     <div>
       <A>
@@ -74,6 +72,9 @@ function Header() {
         </HeaderLink>
         <HeaderLink to="/product-list">
           <FormattedMessage {...messages.features} />
+        </HeaderLink>
+        <HeaderLink to="/product-list2">
+          <FormattedMessage {...messages.features2} />
         </HeaderLink>
         <HeaderLink to="/graphql">
           <FormattedMessage {...messages.graphql} />
