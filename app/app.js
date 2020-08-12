@@ -29,11 +29,14 @@ import 'file-loader?name=.htaccess!./.htaccess'; // eslint-disable-line import/e
 
 import { ApolloProvider } from 'react-apollo';
 import { ApolloProvider as ApolloHooksProvider } from '@apollo/react-hooks';
-import ApolloClient from 'apollo-boost';
 import configureStore from './configureStore';
 
 // Import i18n messages
 import { translationMessages } from './i18n';
+
+import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
+import Cookies from "js-cookie";
 
 // Observe loading of Open Sans (to remove open sans, remove the <link> tag in
 // the index.html file and this observer)
@@ -44,13 +47,34 @@ openSansObserver.load().then(() => {
   document.body.classList.add('fontLoaded');
 });
 
+const httpLink = createHttpLink({
+  uri: process.env.URL_BACKEND_SERVER,
+});
+
+const authLink = setContext((_, { headers }) => {
+  // get the authentication token from local storage if it exists
+  const token = Cookies.get('customer_access_token');
+  // return the headers to the context so httpLink can read them
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : "",
+    }
+  }
+});
+
+const client = new ApolloClient({
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache()
+});
+
 // Create redux store with history
 const initialState = {};
 const store = configureStore(initialState, history);
 const MOUNT_NODE = document.getElementById('app');
-const client = new ApolloClient({
-  uri: process.env.URL_BACKEND_SERVER,
-});
+// const client = new ApolloClient({
+//   uri: process.env.URL_BACKEND_SERVER,
+// });
 
 const render = messages => {
   ReactDOM.render(
