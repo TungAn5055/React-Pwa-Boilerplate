@@ -42,12 +42,6 @@ function FeaturePageSaga({ listProducts, loadList,}) {
         <p>Product List Page</p>
       </H1>
         <div key={listProducts}>
-            {/*<button onClick={() => {*/}
-            {/*    const categoriesId = '2';*/}
-            {/*    loadList(categoriesId);*/}
-            {/*    console.log('an');*/}
-            {/*    console.log(listProducts);*/}
-            {/*}} >aaa</button>*/}
             <div key={listProducts}>
                 { listProducts.length &&
                 listProducts.map(item => <p key={item}

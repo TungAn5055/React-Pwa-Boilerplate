@@ -13,4 +13,6 @@ export const CHANGE_USERNAME = 'boilerplate/Home/CHANGE_USERNAME';
 export const CHANGE_PASS = 'boilerplate/Home/CHANGE_PASS';
 export const LOGIN = 'boilerplate/Home/LOGIN';
 export const SET_TOKEN = 'boilerplate/Home/SET_TOKEN';
+export const GET_TOKEN = 'boilerplate/Home/GET_TOKEN';
 export const SIGN_OUT = 'boilerplate/Home/SIGN_OUT';
+export const SET_CART_ID_TO_STORE = 'boilerplate/Home/SET_CART_ID_TO_STORE';

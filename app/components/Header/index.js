@@ -1,24 +1,25 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { FormattedMessage } from 'react-intl';
-
-import Cookies from 'js-cookie';
+import PropTypes from 'prop-types';
+import { createStructuredSelector } from 'reselect';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 import A from './A';
 import Img from './Img';
 import NavBar from './NavBar';
 import HeaderLink from './HeaderLink';
 import Banner from '../../images/an0.jpg';
 import messages from './messages';
+import { makeSelectToken } from '../../containers/HomePage/selectors';
 
-function Header() {
-  const token = Cookies.get('customer_access_token');
+export function Header({ token }) {
   return (
     <div>
       <A>
         <Img src={Banner} alt="react-boilerplate - Logo" />
       </A>
       <div className="header-custom">
-
-        <HeaderLink to={typeof token === 'undefined' ? '/' : ''}>
+        <HeaderLink to={token.token === '' ? '/' : ''}>
           {/* <button className="accountTrigger"> */}
           <span className="accountChip-root-3cE">
             <span className="icon-root-2D0">
@@ -38,12 +39,11 @@ function Header() {
                 <circle cx="12" cy="7" r="4" />
               </svg>
             </span>
-
-            <span>{typeof token === 'undefined' ? 'Sign In' : 'My Account'}</span>
+            <span>{token.token === '' ? 'Sign In' : 'My Account'}</span>
           </span>
           {/* </button> */}
         </HeaderLink>
-
+        {/* eslint-disable-next-line react/button-has-type */}
         <button className="cartTrigger">
           <span className="icon-root-2D0">
             <svg
@@ -84,4 +84,17 @@ function Header() {
   );
 }
 
-export default Header;
+Header.propTypes = {
+  token: PropTypes.string,
+};
+
+const mapStateToProps = createStructuredSelector({
+  token: makeSelectToken(),
+});
+
+const withConnect = connect(mapStateToProps);
+
+export default compose(
+  withConnect,
+  memo,
+)(Header);

@@ -4,14 +4,13 @@
  * This is the first thing users see of our App, at the '/' route
  */
 
-import React, { useEffect, memo, useState } from 'react';
+import React, { memo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { useInjectReducer } from 'utils/injectReducer';
 import { useInjectSaga } from 'utils/injectSaga';
-import H2 from 'components/H2';
 import { useMutation } from '@apollo/react-hooks';
 import Cookies from 'js-cookie';
 import TextField from '@material-ui/core/TextField';
@@ -28,12 +27,13 @@ import {
   changePass,
   setTokenToStores,
   signOuts,
+  setCartIdToStore,
 } from './actions';
 import { makeSelectUsername, makeSelectPass } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 import signInMutation from '../../queries/login.graphql';
-import signOutMutation from '../../queries/logout.graphql';
+import createEmptyCart from '../../queries/createCart.graphql';
 
 const key = 'home';
 const useStyles = makeStyles(theme => ({
@@ -63,6 +63,7 @@ export function HomePage({
   onChangePass,
   setTokenToStore,
   signOut,
+  setCartId,
 }) {
   useInjectReducer({ key, reducer });
   useInjectSaga({ key, saga });
@@ -70,17 +71,20 @@ export function HomePage({
   const token = Cookies.get('customer_access_token');
   const classes = useStyles();
 
+  // signIn
   const [
     signIn,
     { loading: mutationLoading, error: mutationError },
   ] = useMutation(signInMutation, {
     fetchPolicy: 'no-cache',
     onCompleted(data) {
+      // eslint-disable-next-line no-shadow
       const token = data.generateCustomerToken.token
         ? data.generateCustomerToken.token
         : '';
       setTokenToStore(token);
-      window.location.reload();
+      emptyCart();
+      // window.location.reload();
     },
     onError(error) {
       setErrorMess(error.message);
@@ -88,16 +92,13 @@ export function HomePage({
     },
   });
 
-  // const [signOut] = useMutation(signOutMutation, {
-  //   fetchPolicy: 'no-cache',
-  //   onCompleted(data) {
-  //     console.log(data);
-  //   },
-  //   onError(error) {
-  //     setErrorMess(error.message);
-  //     console.log(error.message);
-  //   },
-  // });
+  // create empty cart
+  const [emptyCart] = useMutation(createEmptyCart, {
+    fetchPolicy: 'no-cache',
+    onCompleted(data) {
+      setCartId(data.cartId);
+    },
+  });
 
   if (typeof token === 'undefined') {
     return (
@@ -164,11 +165,13 @@ export function HomePage({
             </Button>
             <Grid container>
               <Grid item xs>
+                {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                 <Link href="#" variant="body2">
                   Forgot password?
                 </Link>
               </Grid>
               <Grid item>
+                {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                 <Link href="#" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
@@ -207,6 +210,7 @@ HomePage.propTypes = {
   onChangePass: PropTypes.func,
   setTokenToStore: PropTypes.func,
   signOut: PropTypes.func,
+  setCartId: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -220,6 +224,7 @@ export function mapDispatchToProps(dispatch) {
     onChangePass: evt => dispatch(changePass(evt.target.value)),
     setTokenToStore: token => dispatch(setTokenToStores(token)),
     signOut: () => dispatch(signOuts()),
+    setCartId: cartId => dispatch(setCartIdToStore(cartId)),
   };
 }
 

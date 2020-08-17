@@ -15,7 +15,15 @@
  *    }
  */
 
-import { CHANGE_USERNAME, CHANGE_PASS, LOGIN, SET_TOKEN, SIGN_OUT } from './constants';
+import {
+  CHANGE_USERNAME,
+  CHANGE_PASS,
+  LOGIN,
+  SET_TOKEN,
+  GET_TOKEN,
+  SIGN_OUT,
+  SET_CART_ID_TO_STORE,
+} from './constants';
 
 export function changeUsername(username) {
   return {
@@ -40,6 +48,19 @@ export function setTokenToStores(token) {
   return {
     type: SET_TOKEN,
     token,
+  };
+}
+
+export function getTokenFromStores() {
+  return {
+    type: GET_TOKEN,
+  };
+}
+
+export function setCartIdToStore(cartId) {
+  return {
+    type: SET_CART_ID_TO_STORE,
+    cartId,
   };
 }
 

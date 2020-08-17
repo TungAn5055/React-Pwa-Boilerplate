@@ -2,13 +2,9 @@
  * Gets the repositories of the user from Github
  */
 
-import { call, put, select, takeLatest } from 'redux-saga/effects';
-import {
-  makeSelectUsername,
-  makeSelectPass,
-} from 'containers/HomePage/selectors';
+import { takeLatest } from 'redux-saga/effects';
 import Cookie from 'js-cookie';
-import { SET_TOKEN, SIGN_OUT } from './constants';
+import { SET_TOKEN, SIGN_OUT, GET_TOKEN } from './constants';
 
 /**
  * Github repos request/response handler
@@ -33,6 +29,16 @@ export function* signOut() {
   }
 }
 
+// eslint-disable-next-line consistent-return
+export function* getTokenFromStore() {
+  try {
+    // eslint-disable-next-line no-undef
+    return Cookies.get('customer_access_token');
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 /**
  * Root saga manages watcher lifecycle
  */
@@ -43,4 +49,5 @@ export default function* githubData() {
   // It will be cancelled automatically on component unmount
   yield takeLatest(SET_TOKEN, setTokenToStore);
   yield takeLatest(SIGN_OUT, signOut);
+  yield takeLatest(GET_TOKEN, getTokenFromStore);
 }

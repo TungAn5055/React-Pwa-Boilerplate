@@ -1,11 +1,17 @@
 import produce from 'immer';
-import { CHANGE_PASS, CHANGE_USERNAME, SET_TOKEN } from './constants';
+import {
+  CHANGE_PASS,
+  CHANGE_USERNAME,
+  SET_CART_ID_TO_STORE,
+  SET_TOKEN,
+} from './constants';
 
 // The initial state of the App
 export const initialState = {
   username: '',
   pass: '',
   token: '',
+  cartId: '',
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -21,6 +27,8 @@ const homeReducer = (state = initialState, action) =>
       case SET_TOKEN:
         draft.token = action.token;
         break;
+      case SET_CART_ID_TO_STORE:
+        draft.cartId = action.cartId;
     }
   });
 

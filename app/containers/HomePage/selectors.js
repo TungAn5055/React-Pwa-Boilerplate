@@ -1,7 +1,6 @@
 /**
  * Homepage selectors
  */
-
 import { createSelector } from 'reselect';
 import { initialState } from './reducer';
 
@@ -10,13 +9,31 @@ const selectHome = state => state.home || initialState;
 const makeSelectUsername = () =>
   createSelector(
     selectHome,
-    stateHome => stateHome.username,
+    state => state.username,
   );
 
 const makeSelectPass = () =>
   createSelector(
     selectHome,
-    stateHome => stateHome.pass,
+    state => state.pass,
   );
 
-export { selectHome, makeSelectUsername, makeSelectPass };
+const makeSelectCartId = () =>
+  createSelector(
+    selectHome,
+    state => state.cartId,
+  );
+
+const makeSelectToken = () =>
+  createSelector(
+    selectHome,
+    state => state.token,
+  );
+
+export {
+  selectHome,
+  makeSelectUsername,
+  makeSelectPass,
+  makeSelectCartId,
+  makeSelectToken,
+};
