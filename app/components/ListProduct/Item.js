@@ -1,8 +1,39 @@
-import React from 'react';
+import React, { memo } from 'react';
+import PropTypes from 'prop-types';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { actionAddToCart } from '../../containers/Saga/listProduct/actions';
 import './ListView.scss';
+// eslint-disable-next-line import/order
+import { useQuery } from '@apollo/react-hooks';
+import ADD_SIMPLE_PRODUCT_TO_CART from '../../queries/addSimpleProductsToCart.graphql';
+import { createStructuredSelector } from 'reselect';
+import { makeSelectCartId } from '../../containers/HomePage/selectors';
 
-const Item = props => {
+function Item(props, cartId) {
+  // eslint-disable-next-line react/prop-types
   const { item } = props;
+  // eslint-disable-next-line consistent-return
+  function onClickAddToCart() {
+    const quantitys = item.quantity;
+    const skus = item.sku;
+
+    console.log('hhhr');
+    console.log(cartId);
+    console.log(quantitys);
+    console.log(skus);
+
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const { loading, error, data } = useQuery(ADD_SIMPLE_PRODUCT_TO_CART, {
+      variables: { cart_id: cartId, quantity: quantitys, sku: skus },
+    });
+    if (loading) return null;
+    if (error || data.products.items.length === 0) {
+      console.log(error);
+      return null;
+    }
+  }
+
   return (
     <div className="product-grid__product">
       <div className="product-grid__img-wrapper">
@@ -20,9 +51,13 @@ const Item = props => {
       <div className="product-grid__extend-wrapper">
         <div className="product-grid__extend">
           <p className="product-grid__description">Sku: {item.sku}</p>
-          <span className="product-grid__btn product-grid__add-to-cart">
+          {/* eslint-disable-next-line react/button-has-type */}
+          <button
+            className="product-grid__btn product-grid__add-to-cart"
+            onClick={onClickAddToCart}
+          >
             <i className="fa fa-cart-arrow-down" /> Add to cart
-          </span>
+          </button>
           <span className="product-grid__btn product-grid__view">
             <i className="fa fa-eye" /> View more
           </span>
@@ -30,6 +65,29 @@ const Item = props => {
       </div>
     </div>
   );
+}
+
+// export default Item;
+
+Item.propTypes = {
+  // eslint-disable-next-line react/no-unused-prop-types
+  cartId: PropTypes.string,
 };
 
-export default Item;
+const mapStateToProps = createStructuredSelector({
+  cartId: makeSelectCartId(),
+});
+// export function mapDispactchToProps(dispatch) {
+//   return {
+//     onClickAddToCart: () => {
+//       dispatch(actionAddToCart());
+//     },
+//   };
+// }
+
+const withConnect = connect(mapStateToProps);
+
+export default compose(
+  withConnect,
+  memo,
+)(Item);

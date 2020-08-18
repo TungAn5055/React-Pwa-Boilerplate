@@ -1,4 +1,7 @@
 import produce from 'immer';
+import { persistReducer } from 'redux-persist';
+import { autoMergeLevel2 } from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
+import storage from 'redux-persist/lib/storage';
 import {
   CHANGE_PASS,
   CHANGE_USERNAME,
@@ -31,5 +34,14 @@ const homeReducer = (state = initialState, action) =>
         draft.cartId = action.cartId;
     }
   });
+
+// const persistConfig = {
+//   key: 'home',
+//   storage,
+//   // blacklist: ['username'], // khong luu gi
+//   // whitelist: ['home'], // chi luu gi
+//   stateReconciler: autoMergeLevel2, // Xem thêm tại mục "Quá trình merge".
+// };
+// const pReducer = persistReducer(persistConfig, homeReducer);
 
 export default homeReducer;

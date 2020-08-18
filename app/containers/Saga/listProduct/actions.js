@@ -13,3 +13,10 @@ export function actionLoadProductByCategories(categoriesId) {
     categoriesId,
   };
 }
+
+export function actionAddToCart() {
+  return {
+    type: LOAD_LIST_PRODUCT,
+    categoriesId,
+  };
+}

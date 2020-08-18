@@ -1,20 +1,32 @@
-import { put, takeLatest, getContext, setContext } from 'redux-saga/effects';
+import {
+  put,
+  takeLatest,
+  getContext,
+  setContext,
+  call,
+} from 'redux-saga/effects';
+import { Query } from 'react-apollo';
 import { LOAD_LIST_PRODUCT } from './constants';
 import { actionSetListProduct } from './actions';
-
 import { client } from '../../../utils/requestApollo';
-
-import GET_PRODUCTS_BY_CATEGORY from '../../../queries/getProductsByCategory.graphql';
+import GET_PRODUCTS_BY_CATEGORY from '../../../queries/getProductsByCategory.ggl';
 
 // const delay = ms => new Promise(yea => setTimeout(yea, ms));
 
 export function* getProduct({ categoriesId }) {
   // this is code get graphql
-  const clients = yield getContext('client');
-  // const listProducts = ['annn1'];
-  // console.log('annn333n');
-  // console.log(clients);
+  // eslint-disable-next-line no-shadow
+  const client = yield getContext('client');
+  // const {
+  //   data: { all },
+  // } = yield call(client, {
+  //   GET_PRODUCTS_BY_CATEGORY,
+  //   fetchPolicy: 'no-cache',
+  // });
+
+  // console.log('dattttt');
   // console.log(client.query);
+  const listProducts = [];
   yield put(actionSetListProduct(listProducts));
 }
 /**

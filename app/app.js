@@ -19,7 +19,7 @@ import history from 'utils/history';
 
 // Import root app
 import App from 'containers/App';
-
+import { PersistGate } from 'redux-persist/lib/integration/react';
 // Import Language Provider
 import LanguageProvider from 'containers/LanguageProvider';
 
@@ -29,6 +29,7 @@ import 'file-loader?name=.htaccess!./.htaccess'; // eslint-disable-line import/e
 
 import { ApolloProvider } from 'react-apollo';
 import { ApolloProvider as ApolloHooksProvider } from '@apollo/react-hooks';
+import { persistStore } from 'redux-persist';
 import { client } from './utils/requestApollo';
 import { translationMessages } from './i18n';
 import configureStore from './configureStore';
@@ -50,16 +51,20 @@ const MOUNT_NODE = document.getElementById('app');
 // eslint-disable-next-line no-unused-vars
 export const ClientContext = React.createContext(client);
 
+const persistor = persistStore(store);
+
 const render = messages => {
   ReactDOM.render(
     <ApolloProvider client={client}>
       <ApolloHooksProvider client={client}>
         <Provider store={store}>
-          <LanguageProvider messages={messages}>
-            <ConnectedRouter history={history}>
-              <App />
-            </ConnectedRouter>
-          </LanguageProvider>
+          <PersistGate persistor={persistor}>
+            <LanguageProvider messages={messages}>
+              <ConnectedRouter history={history}>
+                <App />
+              </ConnectedRouter>
+            </LanguageProvider>
+          </PersistGate>
         </Provider>
       </ApolloHooksProvider>
     </ApolloProvider>,
