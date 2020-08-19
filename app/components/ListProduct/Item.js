@@ -1,40 +1,41 @@
 import React, { memo } from 'react';
+import './ListView.scss';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import './ListView.scss';
-// eslint-disable-next-line import/order
-import { useMutation } from '@apollo/react-hooks';
-import ADD_SIMPLE_PRODUCT_TO_CART from '../../queries/addSimpleProductsToCart.graphql';
-// eslint-disable-next-line import/order
 import { createStructuredSelector } from 'reselect';
+import { useMutation } from '@apollo/react-hooks';
 import { makeSelectCartId } from '../../containers/HomePage/selectors';
+import ADD_SIMPLE_PRODUCT_TO_CART from '../../queries/addSimpleProductsToCart.graphql';
+// eslint-disable-next-line no-unused-vars
+import LoadingIndicator from 'components/LoadingIndicator';
 
-const Item = props => {
+function Item(props) {
   // eslint-disable-next-line react/prop-types
   const { item, cartId } = props;
+  const quantitys = 1;
+  const skus = item.sku;
 
-  // eslint-disable-next-line consistent-return
-  function onClickAddToCart() {
-    const quantitys = 1;
-    const skus = item.sku;
+  console.log('hhhr');
+  console.log(cartId);
+  console.log(quantitys);
+  console.log(skus);
 
-    console.log('hhhr');
-    console.log(cartId);
-    console.log(quantitys);
-    console.log(skus);
-
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const { loading, error, data } = useMutation(ADD_SIMPLE_PRODUCT_TO_CART, {
+  // eslint-disable-next-line no-shadow
+  const [onClickAddToCart, { loading: LoadingIndicator }] = useMutation(
+    ADD_SIMPLE_PRODUCT_TO_CART,
+    {
       variables: { cart_id: cartId, quantity: quantitys, sku: skus },
-    });
-    if (loading) return null;
-    if (error || data.products.items.length === 0) {
-      console.log(error);
-      return null;
-    }
-    console.log(data);
-  }
+      fetchPolicy: 'no-cache',
+      onCompleted(data) {
+        console.log(data);
+      },
+      onError(error) {
+        console.log(error.message);
+        return <LoadingIndicator />;
+      },
+    },
+  );
 
   return (
     <div className="product-grid__product">
@@ -67,7 +68,7 @@ const Item = props => {
       </div>
     </div>
   );
-};
+}
 
 // export default Item;
 
