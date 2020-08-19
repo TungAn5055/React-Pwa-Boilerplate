@@ -9,10 +9,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { useInjectReducer } from 'utils/injectReducer';
 import { useInjectSaga } from 'utils/injectSaga';
 import { useMutation } from '@apollo/react-hooks';
-import Cookies from 'js-cookie';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -21,6 +19,8 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+// eslint-disable-next-line no-unused-vars
+import LoadingIndicator from 'components/LoadingIndicator';
 import Section from './Section';
 import {
   changeUsername,
@@ -29,8 +29,11 @@ import {
   signOuts,
   setCartIdToStore,
 } from './actions';
-import { makeSelectUsername, makeSelectPass } from './selectors';
-import reducer from './reducer';
+import {
+  makeSelectUsername,
+  makeSelectPass,
+  makeSelectToken,
+} from './selectors';
 import saga from './saga';
 import signInMutation from '../../queries/login.graphql';
 import createEmptyCart from '../../queries/createCart.graphql';
@@ -59,22 +62,23 @@ const useStyles = makeStyles(theme => ({
 export function HomePage({
   username,
   pass,
+  token,
   onChangeUsername,
   onChangePass,
   setTokenToStore,
   signOut,
   setCartId,
 }) {
-  useInjectReducer({ key, reducer });
+  // useInjectReducer({ key, reducer });
   useInjectSaga({ key, saga });
   const [errorMess, setErrorMess] = useState('');
-  const token = Cookies.get('customer_access_token');
   const classes = useStyles();
 
   // signIn
   const [
     signIn,
-    { loading: mutationLoading, error: mutationError },
+    // eslint-disable-next-line no-shadow,no-unused-vars
+    { loading: LoadingIndicator },
   ] = useMutation(signInMutation, {
     fetchPolicy: 'no-cache',
     onCompleted(data) {
@@ -100,7 +104,7 @@ export function HomePage({
     },
   });
 
-  if (typeof token === 'undefined') {
+  if (typeof token === 'undefined' || token === '') {
     return (
       <article>
         <div className="login-form">
@@ -118,7 +122,7 @@ export function HomePage({
                   email: username,
                   password: pass,
                 },
-              });
+              }).then(r => console.log(r));
             }}
           >
             <TextField
@@ -206,6 +210,7 @@ export function HomePage({
 HomePage.propTypes = {
   username: PropTypes.string,
   pass: PropTypes.string,
+  token: PropTypes.string,
   onChangeUsername: PropTypes.func,
   onChangePass: PropTypes.func,
   setTokenToStore: PropTypes.func,
@@ -216,6 +221,7 @@ HomePage.propTypes = {
 const mapStateToProps = createStructuredSelector({
   username: makeSelectUsername(),
   pass: makeSelectPass(),
+  token: makeSelectToken(),
 });
 
 export function mapDispatchToProps(dispatch) {

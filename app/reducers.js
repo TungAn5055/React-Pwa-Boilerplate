@@ -11,6 +11,7 @@ import languageProviderReducer from 'containers/LanguageProvider/reducer';
 import { persistReducer } from 'redux-persist';
 import { autoMergeLevel2 } from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import storage from 'redux-persist/lib/storage';
+import reducer from './containers/HomePage/reducer';
 /**
  * Merges the main reducer with the router state and dynamically injected reducers
  */
@@ -19,6 +20,7 @@ export default function createReducer(injectedReducers = {}) {
     global: globalReducer,
     language: languageProviderReducer,
     router: connectRouter(history),
+    home: reducer,
     ...injectedReducers,
   });
 

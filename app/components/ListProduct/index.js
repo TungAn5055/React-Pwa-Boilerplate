@@ -1,5 +1,6 @@
 import React from 'react';
 import { useQuery } from '@apollo/react-hooks';
+import LoadingIndicator from 'components/LoadingIndicator';
 import Item from './Item';
 import GET_PRODUCTS_BY_CATEGORY from '../../queries/getProductsByCategory.graphql';
 import CenteredSection from '../../containers/HomePage/CenteredSection';
@@ -7,9 +8,9 @@ import CenteredSection from '../../containers/HomePage/CenteredSection';
 const ListProduct = () => {
   const categoriesId = '2';
   const { loading, error, data } = useQuery(GET_PRODUCTS_BY_CATEGORY, {
-    variables: { category_id: categoriesId, pageSize: 10 },
+    variables: { category_id: categoriesId, pageSize: 12 },
   });
-  if (loading) return null;
+  if (loading) return <LoadingIndicator />;
   if (error || data.products.items.length === 0) {
     console.log(error);
     return null;

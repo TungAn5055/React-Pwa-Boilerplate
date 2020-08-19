@@ -20,14 +20,14 @@ export function* setTokenToStore(data) {
   }
 }
 
-export function* signOut() {
-  try {
-    Cookie.remove('customer_access_token');
-    window.location.reload();
-  } catch (err) {
-    console.log(err);
-  }
-}
+// export function* signOut() {
+//   try {
+//     Cookie.remove('customer_access_token');
+//     window.location.reload();
+//   } catch (err) {
+//     console.log(err);
+//   }
+// }
 
 // eslint-disable-next-line consistent-return
 export function* getTokenFromStore() {
@@ -48,6 +48,6 @@ export default function* githubData() {
   // It returns task descriptor (just like fork) so we can continue execution
   // It will be cancelled automatically on component unmount
   yield takeLatest(SET_TOKEN, setTokenToStore);
-  yield takeLatest(SIGN_OUT, signOut);
+  // yield takeLatest(SIGN_OUT, signOut);
   yield takeLatest(GET_TOKEN, getTokenFromStore);
 }

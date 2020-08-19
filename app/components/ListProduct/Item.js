@@ -2,20 +2,21 @@ import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { actionAddToCart } from '../../containers/Saga/listProduct/actions';
 import './ListView.scss';
 // eslint-disable-next-line import/order
-import { useQuery } from '@apollo/react-hooks';
+import { useMutation } from '@apollo/react-hooks';
 import ADD_SIMPLE_PRODUCT_TO_CART from '../../queries/addSimpleProductsToCart.graphql';
+// eslint-disable-next-line import/order
 import { createStructuredSelector } from 'reselect';
 import { makeSelectCartId } from '../../containers/HomePage/selectors';
 
-function Item(props, cartId) {
+const Item = props => {
   // eslint-disable-next-line react/prop-types
-  const { item } = props;
+  const { item, cartId } = props;
+
   // eslint-disable-next-line consistent-return
   function onClickAddToCart() {
-    const quantitys = item.quantity;
+    const quantitys = 1;
     const skus = item.sku;
 
     console.log('hhhr');
@@ -24,7 +25,7 @@ function Item(props, cartId) {
     console.log(skus);
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const { loading, error, data } = useQuery(ADD_SIMPLE_PRODUCT_TO_CART, {
+    const { loading, error, data } = useMutation(ADD_SIMPLE_PRODUCT_TO_CART, {
       variables: { cart_id: cartId, quantity: quantitys, sku: skus },
     });
     if (loading) return null;
@@ -32,6 +33,7 @@ function Item(props, cartId) {
       console.log(error);
       return null;
     }
+    console.log(data);
   }
 
   return (
@@ -65,7 +67,7 @@ function Item(props, cartId) {
       </div>
     </div>
   );
-}
+};
 
 // export default Item;
 
