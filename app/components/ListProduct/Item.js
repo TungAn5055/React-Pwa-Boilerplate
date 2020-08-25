@@ -5,10 +5,10 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { useMutation } from '@apollo/react-hooks';
+import LoadingIndicator from 'components/LoadingIndicator';
 import { makeSelectCartId } from '../../containers/HomePage/selectors';
 import ADD_SIMPLE_PRODUCT_TO_CART from '../../queries/addSimpleProductsToCart.graphql';
 // eslint-disable-next-line no-unused-vars
-import LoadingIndicator from 'components/LoadingIndicator';
 
 function Item(props) {
   // eslint-disable-next-line react/prop-types
@@ -16,20 +16,15 @@ function Item(props) {
   const quantitys = 1;
   const skus = item.sku;
 
-  console.log('hhhr');
-  console.log(cartId);
-  console.log(quantitys);
-  console.log(skus);
-
   // eslint-disable-next-line no-shadow
   const [onClickAddToCart, { loading: LoadingIndicator }] = useMutation(
     ADD_SIMPLE_PRODUCT_TO_CART,
     {
       variables: { cart_id: cartId, quantity: quantitys, sku: skus },
       fetchPolicy: 'no-cache',
-      onCompleted(data) {
-        console.log(data);
-      },
+      // onCompleted(data) {
+      //  console.log(data);
+      // },
       onError(error) {
         console.log(error.message);
         return <LoadingIndicator />;

@@ -1,55 +1,40 @@
-import {
-  put,
-  takeLatest,
-  getContext,
-  setContext,
-  call,
-} from 'redux-saga/effects';
-import { Query } from 'react-apollo';
+import { put, takeLatest } from 'redux-saga/effects';
+import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
 import { LOAD_LIST_PRODUCT } from './constants';
 import { actionSetListProduct } from './actions';
-import { client } from '../../../utils/requestApollo';
-import GET_PRODUCTS_BY_CATEGORY from '../../../queries/getProductsByCategory.ggl';
+import { GET_PRODUCT_BY_CATEGORY } from '../../../queries/getProductsByCategory.ggl';
+import { GET_PRODUCT_BY_CATEGORY1 } from '../../../queries/getProductsByCategory.graphql';
 
-// const delay = ms => new Promise(yea => setTimeout(yea, ms));
+const httpLink = new HttpLink({
+  uri: process.env.URL_BACKEND_SERVER,
+  credentials: 'same-origin',
+});
 
-export function* getProduct({ categoriesId }) {
+function createApolloClient() {
+  return new ApolloClient({
+    link: httpLink,
+    cache: new InMemoryCache(),
+  });
+}
+
+export function* getProduct({ categoryId }) {
   // this is code get graphql
   // eslint-disable-next-line no-shadow
-  const client = yield getContext('client');
-  // const {
-  //   data: { all },
-  // } = yield call(client, {
-  //   GET_PRODUCTS_BY_CATEGORY,
-  //   fetchPolicy: 'no-cache',
-  // });
+  const client = createApolloClient();
+  const res = yield client.query({
+    query: GET_PRODUCT_BY_CATEGORY,
+    variables: { category_id: categoryId, pageSize: 10 },
+  });
 
-  // console.log('dattttt');
-  // console.log(client.query);
-  const listProducts = [];
+  // console.log('to sagaa');
+  // console.log(res.data.products.items);
+
+  const listProducts = res.data.products.items;
   yield put(actionSetListProduct(listProducts));
 }
 /**
  * Root saga manages watcher lifecycle
  */
-export default function* userSaga() {
+export default function* getData() {
   yield takeLatest(LOAD_LIST_PRODUCT, getProduct);
 }
-
-export function* rootSaga() {
-  yield setContext({ client });
-  /* other sagas */
-}
-
-// import { useQuery } from '@apollo/react-hooks';
-// import GET_PRODUCTS_POKEMON from '../../queries/getPokemons.graphql';
-// import GET_PRODUCTS_BY_SKU from '../../queries/getProductsBySku.graphql';
-// const count = 10;
-// const {loading, error, data} = useQuery(GET_PRODUCTS_POKEMON, {
-//   variables: {first: count}
-// });
-// if (loading) return null;
-// if (error) return <p>Error :(</p>;
-// return (
-//   <Course data={data} />
-// );

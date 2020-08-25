@@ -10,6 +10,8 @@ import { useInjectReducer } from '../../utils/injectReducer';
 import { useInjectSaga } from '../../utils/injectSaga';
 import reducer from '../../containers/Saga/listProduct/reducer';
 import saga from '../../containers/Saga/listProduct/saga';
+import Item from '../ListProduct/Item';
+import CenteredSection from '../../containers/HomePage/CenteredSection';
 
 function ListProductSaga({ listProducts, loadList }) {
   const key = REDUX_LIST_PRODUCT;
@@ -20,15 +22,19 @@ function ListProductSaga({ listProducts, loadList }) {
     const categoriesId = '2';
     loadList(categoriesId);
   }, []);
-
   return (
-    <div key={listProducts}>
-      <p>123</p>
-      <div key={listProducts}>
-        {listProducts.length &&
-          listProducts.map(item => <p key={item}>{item}</p>)}
+    <CenteredSection>
+      <div className="product-grid product-grid--flexbox">
+        <div className="product-grid__wrapper">
+          {/* eslint-disable-next-line array-callback-return */}
+          {listProducts.length > 0 &&
+            listProducts.map((item, index) => (
+              // eslint-disable-next-line react/no-array-index-key
+              <Item item={item} key={index} />
+            ))}
+        </div>
       </div>
-    </div>
+    </CenteredSection>
   );
 }
 

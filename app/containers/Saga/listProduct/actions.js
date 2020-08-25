@@ -6,15 +6,7 @@ export function actionSetListProduct(listProducts) {
     listProducts,
   };
 }
-
 export function actionLoadProductByCategories(categoriesId) {
-  return {
-    type: LOAD_LIST_PRODUCT,
-    categoriesId,
-  };
-}
-
-export function actionAddToCart() {
   return {
     type: LOAD_LIST_PRODUCT,
     categoriesId,

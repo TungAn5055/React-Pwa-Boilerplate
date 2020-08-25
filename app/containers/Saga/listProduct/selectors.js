@@ -1,9 +1,7 @@
 import { createSelector } from 'reselect';
 import { initialState } from './reducer';
 
-const selectListProduct = state =>
-  // console.log(state);
-  state.listProduct || initialState;
+const selectListProduct = state => state.listProduct || initialState;
 const makeSelectListProduct = () =>
   createSelector(
     selectListProduct,
