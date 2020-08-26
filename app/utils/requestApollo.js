@@ -22,7 +22,3 @@ export const client = new ApolloClient({
   link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 });
-
-export function* rootSaga() {
-  yield setContext({ client });
-}
