@@ -1,7 +1,5 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
-
-import H1 from 'components/H1';
 import ListProductSaga from '../../components/ListProductSaga/index';
 
 export default function FeaturePage() {
@@ -14,9 +12,7 @@ export default function FeaturePage() {
           content="Feature page of React.js Boilerplate application"
         />
       </Helmet>
-      <H1>
-        <p>Product List Page</p>
-      </H1>
+      <h1>Product List Page</h1>
       <ListProductSaga />
     </div>
   );

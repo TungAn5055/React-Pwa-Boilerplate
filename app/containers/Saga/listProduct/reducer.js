@@ -12,8 +12,6 @@ const listProduct = (state = initialState, action) =>
       case SET_PRODUCT_LIST:
         // eslint-disable-next-line no-param-reassign
         draft.listProducts = action.listProducts;
-        console.log('dfsfs');
-        console.log(action.listProducts);
         break;
       default:
         // need this for default case

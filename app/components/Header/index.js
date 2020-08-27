@@ -4,20 +4,17 @@ import PropTypes from 'prop-types';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import A from './A';
-import Img from './Img';
 import NavBar from './NavBar';
 import HeaderLink from './HeaderLink';
 import Banner from '../../images/an0.jpg';
 import messages from './messages';
+import Img from './Img';
 import { makeSelectToken } from '../../containers/HomePage/selectors';
 
 export function Header({ token }) {
   return (
     <div>
-      <A>
-        <Img src={Banner} alt="react-boilerplate - Logo" />
-      </A>
+      <Img src={Banner} alt="react-boilerplate - Logo" />
       <div className="header-custom">
         <HeaderLink to={token.token === '' ? '/' : ''}>
           {/* <button className="accountTrigger"> */}
