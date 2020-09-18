@@ -7,7 +7,7 @@ import { createStructuredSelector } from 'reselect';
 import { useMutation } from '@apollo/react-hooks';
 import LoadingIndicator from 'components/LoadingIndicator';
 import { makeSelectCartId } from '../../containers/HomePage/selectors';
-import ADD_SIMPLE_PRODUCT_TO_CART from '../../queries/addSimpleProductsToCart.graphql';
+// import ADD_SIMPLE_PRODUCT_TO_CART from '../../queries/addSimpleProductsToCart.gql';
 // eslint-disable-next-line no-unused-vars
 
 function Item(props) {
@@ -16,21 +16,21 @@ function Item(props) {
   const quantitys = 1;
   const skus = item.sku;
 
-  // eslint-disable-next-line no-shadow
-  const [onClickAddToCart, { loading: LoadingIndicator }] = useMutation(
-    ADD_SIMPLE_PRODUCT_TO_CART,
-    {
-      variables: { cart_id: cartId, quantity: quantitys, sku: skus },
-      fetchPolicy: 'no-cache',
-      // onCompleted(data) {
-      //  console.log(data);
-      // },
-      onError(error) {
-        console.log(error.message);
-        return <LoadingIndicator />;
-      },
-    },
-  );
+  // // eslint-disable-next-line no-shadow
+  // const [onClickAddToCart, { loading: LoadingIndicator }] = useMutation(
+  //   ADD_SIMPLE_PRODUCT_TO_CART,
+  //   {
+  //     variables: { cart_id: cartId, quantity: quantitys, sku: skus },
+  //     fetchPolicy: 'no-cache',
+  //     // onCompleted(data) {
+  //     //  console.log(data);
+  //     // },
+  //     onError(error) {
+  //       console.log(error.message);
+  //       return <LoadingIndicator />;
+  //     },
+  //   },
+  // );
 
   return (
     <div className="product-grid__product">
@@ -52,7 +52,7 @@ function Item(props) {
           {/* eslint-disable-next-line react/button-has-type */}
           <button
             className="product-grid__btn product-grid__add-to-cart"
-            onClick={onClickAddToCart}
+            // onClick={onClickAddToCart}
           >
             <i className="fa fa-cart-arrow-down" /> Add to cart
           </button>

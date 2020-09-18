@@ -1,8 +1,14 @@
-import React from 'react';
+import React, { memo } from 'react';
+import PropTypes from 'prop-types';
 import './ListView.scss';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import { makeSelectCartId } from '../../containers/HomePage/selectors';
+import { actionAddToCartSimpleProduct } from '../../containers/Saga/listProduct/actions';
 
-const Item = props => {
-  const { item } = props;
+// eslint-disable-next-line react/prop-types
+function Item({ item, cartId, onClickAddToCart }) {
   return (
     <div className="product-grid__product">
       <div className="product-grid__img-wrapper">
@@ -20,9 +26,15 @@ const Item = props => {
       <div className="product-grid__extend-wrapper">
         <div className="product-grid__extend">
           <p className="product-grid__description">Sku: {item.sku}</p>
-          <span className="product-grid__btn product-grid__add-to-cart">
+          {/* eslint-disable-next-line react/button-has-type */}
+          <button
+            className="product-grid__btn product-grid__add-to-cart"
+            onClick={() => {
+              onClickAddToCart(cartId, 1, item.sku);
+            }}
+          >
             <i className="fa fa-cart-arrow-down" /> Add to cart
-          </span>
+          </button>
           <span className="product-grid__btn product-grid__view">
             <i className="fa fa-eye" /> View more
           </span>
@@ -30,6 +42,32 @@ const Item = props => {
       </div>
     </div>
   );
+}
+
+Item.propTypes = {
+  // eslint-disable-next-line react/no-unused-prop-types
+  cartId: PropTypes.string,
+  // eslint-disable-next-line react/no-unused-prop-types
+  onClickAddToCart: PropTypes.func,
 };
 
-export default Item;
+const mapStateToProps = createStructuredSelector({
+  cartId: makeSelectCartId(),
+});
+export function mapDispactchToProps(dispatch) {
+  return {
+    onClickAddToCart: (cartId, itemQuantity, itemSkus) => {
+      dispatch(actionAddToCartSimpleProduct(cartId, itemQuantity, itemSkus));
+    },
+  };
+}
+
+const withConnect = connect(
+  mapStateToProps,
+  mapDispactchToProps,
+);
+
+export default compose(
+  withConnect,
+  memo,
+)(Item);

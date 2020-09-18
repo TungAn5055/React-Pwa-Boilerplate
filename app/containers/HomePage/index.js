@@ -19,8 +19,6 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-// eslint-disable-next-line no-unused-vars
-import LoadingIndicator from 'components/LoadingIndicator';
 import Section from './Section';
 import {
   changeUsername,

@@ -10,7 +10,7 @@ import { useInjectReducer } from '../../utils/injectReducer';
 import { useInjectSaga } from '../../utils/injectSaga';
 import reducer from '../../containers/Saga/listProduct/reducer';
 import saga from '../../containers/Saga/listProduct/saga';
-import Item from '../ListProduct/Item';
+import Item from '../ListProductSaga/Item';
 import CenteredSection from '../../containers/HomePage/CenteredSection';
 
 function ListProductSaga({ listProducts, loadList }) {
