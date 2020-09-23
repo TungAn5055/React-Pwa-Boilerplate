@@ -1,11 +1,10 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
-
-import ApolloClient from 'apollo-boost';
 import Courses from './Courses';
-const client = new ApolloClient({
-  uri: process.env.URL_BACKEND_SERVER_BK,
-});
+// import ApolloClient from '@apollo/client';
+// const client = new ApolloClient({
+//   uri: process.env.URL_BACKEND_SERVER_BK,
+// });
 
 // const {  client } = this.props.client;
 

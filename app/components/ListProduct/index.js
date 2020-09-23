@@ -1,5 +1,5 @@
 import React from 'react';
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery } from '@apollo/client';
 import LoadingIndicator from 'components/LoadingIndicator';
 import Item from './Item';
 import GET_PRODUCTS_BY_CATEGORY from '../../queries/getProductsByCategory.graphql';
@@ -12,8 +12,7 @@ const ListProduct = () => {
   });
   if (loading) return <LoadingIndicator />;
   if (error || data.products.items.length === 0) {
-    console.log(error);
-    return null;
+    return false;
   }
   return (
     <CenteredSection>

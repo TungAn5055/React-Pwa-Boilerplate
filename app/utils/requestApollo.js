@@ -20,9 +20,31 @@ export const authLink = setContext((_, { headers }) => {
 
 export const httpLink = createHttpLink({
   uri: process.env.URL_BACKEND_SERVER,
+  // useGETForQueries: true,
+  fetchOptions: {
+    method: 'GET',
+  },
 });
 
 export const client = new ApolloClient({
   link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 });
+
+export const clientRequest = methodType =>
+  new ApolloClient({
+    link: authLink.concat(
+      createHttpLink({
+        uri: process.env.URL_BACKEND_SERVER,
+        fetchOptions: {
+          method: methodType,
+        },
+      }),
+    ),
+    cache: new InMemoryCache(),
+    defaultOptions: {
+      watchQuery: {
+        fetchPolicy: 'cache-and-network',
+      },
+    },
+  });

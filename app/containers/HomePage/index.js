@@ -1,16 +1,10 @@
-/*
- * HomePage
- *
- * This is the first thing users see of our App, at the '/' route
- */
-
 import React, { memo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { useInjectSaga } from 'utils/injectSaga';
-import { useMutation } from '@apollo/react-hooks';
+// import { useMutation } from '@apollo/client';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -35,6 +29,7 @@ import {
 import saga from './saga';
 import signInMutation from '../../queries/login.graphql';
 import createEmptyCart from '../../queries/createCart.graphql';
+import { clientRequest } from '../../utils/requestApollo';
 
 const key = 'home';
 const useStyles = makeStyles(theme => ({
@@ -72,35 +67,40 @@ export function HomePage({
   const [errorMess, setErrorMess] = useState('');
   const classes = useStyles();
 
-  // signIn
-  const [
-    signIn,
-    // eslint-disable-next-line no-shadow,no-unused-vars
-    { loading: LoadingIndicator },
-  ] = useMutation(signInMutation, {
-    fetchPolicy: 'no-cache',
-    onCompleted(data) {
-      // eslint-disable-next-line no-shadow
-      const token = data.generateCustomerToken.token
-        ? data.generateCustomerToken.token
-        : '';
-      setTokenToStore(token);
-      emptyCart();
-      // window.location.reload();
-    },
-    onError(error) {
-      setErrorMess(error.message);
-      console.log(error.message);
-    },
-  });
+  function signIn() {
+    clientRequest('POST')
+      .mutate({
+        mutation: signInMutation,
+        variables: {
+          email: username,
+          password: pass,
+        },
+      })
+      .then(response => {
+        // eslint-disable-next-line no-shadow
+        const token = response.data.generateCustomerToken.token
+          ? response.data.generateCustomerToken.token
+          : '';
+        setTokenToStore(token);
+        emptyCart();
+      })
+      .catch(err => {
+        setErrorMess(err.message);
+      });
+  }
 
   // create empty cart
-  const [emptyCart] = useMutation(createEmptyCart, {
-    fetchPolicy: 'no-cache',
-    onCompleted(data) {
-      setCartId(data.cartId);
-    },
-  });
+  function emptyCart() {
+    clientRequest('POST')
+      .mutate({
+        mutation: createEmptyCart,
+      })
+      .then(response => {
+        setCartId(response.data.cartId);
+      });
+    // .catch()
+    // .finally();
+  }
 
   if (typeof token === 'undefined' || token === '') {
     return (
@@ -115,12 +115,7 @@ export function HomePage({
             noValidate
             onSubmit={e => {
               e.preventDefault();
-              signIn({
-                variables: {
-                  email: username,
-                  password: pass,
-                },
-              }).then(r => console.log(r));
+              signIn();
             }}
           >
             <TextField

@@ -2,20 +2,31 @@ import { put, takeLatest } from 'redux-saga/effects';
 import { LOAD_LIST_PRODUCT } from './constants';
 import { actionSetListProduct } from './actions';
 import { GET_PRODUCT_BY_CATEGORY } from '../../../queries/getProductsByCategory.gql';
+// import { GET_CUSTOMER } from '../../../queries/getCustomer.gql';
 // import { GRAPHQL_ADD_SIMPLE_PRODUCT } from '../../../queries/addSimpleProductsToCart.gql';
 // import { GET_PRODUCT_BY_CATEGORY1 } from '../../../queries/getProductsByCategory.graphql';
-import { client } from '../../../utils/requestApollo';
+import { clientRequest } from '../../../utils/requestApollo';
 // import { client, clientRaw } from '../../../utils/requestClient';
 
 export function* getProduct({ categoryId }) {
   // this is code get graphql
-  const res = yield client.query({
+  // const res = yield client.query({
+  //   query: GET_PRODUCT_BY_CATEGORY,
+  //   variables: { category_id: categoryId, pageSize: 10 },
+  // });
+
+  const res = yield clientRequest('POST').query({
     query: GET_PRODUCT_BY_CATEGORY,
     variables: { category_id: categoryId, pageSize: 10 },
   });
-  console.log(res);
+
   const listProducts = res.data.products.items;
   yield put(actionSetListProduct(listProducts));
+
+  // const customer = yield clientRequest('GET').query({
+  //   query: GET_CUSTOMER,
+  //   variables: { category_id: categoryId, pageSize: 10 },
+  // });
 
   // const variables = {
   //   category_id: categoryId,
