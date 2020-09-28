@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 // eslint-disable-next-line import/no-unresolved
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 // const WebpackPwaManifest = require('webpack-pwa-manifest');
-// const OfflinePlugin = require('offline-plugin');
+const OfflinePlugin = require('offline-plugin');
 const { HashedModuleIdsPlugin } = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
@@ -14,8 +14,8 @@ const prod = require('./webpack.base.babel')({
 
   // In production, we skip all hot-reloading stuff
   entry: [
-    require.resolve('react-app-polyfill/ie11'),
-    require.resolve('url-search-params-polyfill'),
+    // require.resolve('react-app-polyfill/ie11'),
+    // require.resolve('url-search-params-polyfill'),
     path.join(process.cwd(), 'app/app.js'),
   ],
 
@@ -24,7 +24,53 @@ const prod = require('./webpack.base.babel')({
     filename: '[name].[chunkhash].js',
     chunkFilename: '[name].[chunkhash].chunk.js',
   },
-
+  module: {
+    rules: [
+      {
+        test: /\.(jsx|js)$/,
+        exclude: /(node_modules|bower_components)/,
+        loader: 'babel-loader',
+        query: {
+          cacheDirectory: true,
+          presets: ['@babel/preset-env'],
+          babelrc: true,
+        },
+      },
+      {
+        test: /\.(graphql|gql)$/,
+        exclude: /(node_modules|bower_components)/,
+        loader: 'graphql-tag/loader',
+        // use: [
+        //   {
+        //     loader: 'graphql-tag/loader',
+        //   },
+        // ],
+      },
+      {
+        test: /\.(css|scss|sass)$/,
+        exclude: /(node_modules|bower_components)/,
+        use: ['style-loader', 'css-loader', 'sass-loader'],
+      },
+      {
+        test: /\.(jpg|jpeg|gif|png|svg|webp)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              outputPath: './images',
+              name: '[name].[ext]',
+            },
+          },
+        ],
+      },
+    ],
+  },
+  resolve: {
+    modules: ['node_modules', 'app'],
+    extensions: ['*', '.js', '.jsx'],
+    mainFields: ['browser', 'jsnext:main', 'main'],
+    symlinks: false,
+  },
   optimization: {
     minimize: true,
     minimizer: [
@@ -98,6 +144,25 @@ const prod = require('./webpack.base.babel')({
       hashFunction: 'sha256',
       hashDigest: 'hex',
       hashDigestLength: 20,
+    }),
+
+    new OfflinePlugin({
+      relativePaths: false,
+      publicPath: '/',
+      appShell: '/',
+      autoUpdate: 1000 * 60 * 1, // Setting thời gian kiểm tra thay đổi mới là 2 phút
+
+      ServiceWorker: {
+        events: true,
+      },
+
+      caches: {
+        main: [':rest:'],
+        additional: ['*.chunk.js'],
+      },
+
+      // Removes warning for about `additional` section usage
+      safeToUseOptionalCaches: true,
     }),
   ],
 
