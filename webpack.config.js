@@ -1,6 +1,8 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const OfflinePlugin = require('offline-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   mode: 'development',
@@ -65,6 +67,36 @@ module.exports = {
       URL_BACKEND_SERVER: process.env.URL_BACKEND_SERVER,
       URL_BACKEND_SERVER_2: process.env.URL_BACKEND_SERVER_2,
     }),
+    new OfflinePlugin({
+      relativePaths: false,
+      publicPath: '/',
+      appShell: '/',
+      responseStrategy: 'cache-first',
+      autoUpdate: 1000 * 60 * 5,
+      excludes: ['**/*.js', '**/*.css', '**/*.ico', '**/*.jpg'],
+      cacheMaps: [
+        {
+          match: url => {
+            const $array = ['/checkout/', '/checkout1/'];
+            // eslint-disable-next-line consistent-return
+            $array.forEach($item => {
+              if (url.pathname.indexOf($item) !== 0) {
+                return false;
+              }
+            });
+            return new URL('/', url.pathname);
+          },
+          requestTypes: ['navigate'],
+        },
+      ],
+      ServiceWorker: {
+        events: true,
+      },
+      // AppCache: false,
+      safeToUseOptionalCaches: true,
+    }),
+    new CopyWebpackPlugin([{ from: 'static/checkout', to: 'dist' }]),
+    new CopyWebpackPlugin([{ from: 'static/checkout1', to: 'dist' }]),
   ],
   devtool: 'eval-source-map',
   // dev server
